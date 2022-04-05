@@ -15,8 +15,8 @@ import java.util.Date;
 @Table(name = "user")
 public class User extends AuditableBase {
 
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "id", name = "role_id", nullable = false)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @Column(name = "user_name", nullable = false)

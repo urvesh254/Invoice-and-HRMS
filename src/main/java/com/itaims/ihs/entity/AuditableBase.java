@@ -34,4 +34,5 @@ public abstract class AuditableBase {
     @LastModifiedDate
     @Column(name="modified_dt")
     private Timestamp modifiedDt;
+
 }
