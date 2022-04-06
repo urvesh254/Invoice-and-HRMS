@@ -25,8 +25,9 @@ public class Employee extends AuditableBase {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "department", nullable = false)
-    private String department;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
     @Column(name = "joining_date")
     @Temporal(TemporalType.DATE)
@@ -36,6 +37,6 @@ public class Employee extends AuditableBase {
     @Temporal(TemporalType.DATE)
     private Date dob;
 
-    @ManyToMany(mappedBy = "assignedEmployees",cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "assignedEmployees", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Project> projects;
 }
