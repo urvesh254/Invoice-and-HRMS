@@ -21,6 +21,7 @@ public class Role extends AuditableBase {
     private List<User> users;
 
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "role_permission", inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
 
     @Override
