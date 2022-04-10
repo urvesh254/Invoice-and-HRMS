@@ -37,7 +37,6 @@ public class MilestoneService {
 
     @Transactional
     public void update(Milestone object) {
-//        TODO: add milestone-modules update feature
         milestoneDao.update(object);
     }
 

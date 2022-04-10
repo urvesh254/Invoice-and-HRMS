@@ -2,6 +2,7 @@ package com.itaims.ihs.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itaims.ihs.util.Status;
 import lombok.Data;
@@ -48,7 +49,7 @@ public class Project extends AuditableBase {
     @JoinTable(name = "project_employee", inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> assignedEmployees;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Milestone> milestones;
 
@@ -59,7 +60,7 @@ public class Project extends AuditableBase {
     private Status status;
 
     @JsonCreator
-    public Project(@JsonProperty(required = true) long customerId, @JsonProperty(required = true) String projectName, @JsonProperty(required = true) Date startDate, @JsonProperty(required = true) double totalBudget, @JsonProperty(required = true) String description, Status status, @JsonProperty("assignedEmployees") List<Long> assignedEmployeeIDs, @JsonProperty("milestones") List<Long> milestoneIDs) {
+    public Project(@JsonProperty(required = true) long customerId, @JsonProperty(required = true) String projectName, @JsonProperty(required = true) Date startDate, @JsonProperty(required = true) double totalBudget, @JsonProperty(required = true) String description, Status status, @JsonProperty("assignedEmployees") List<Long> assignedEmployeeIDs) {
         this.customer = new Customer();
         this.customer.setId(customerId);
         System.out.println(this.customer);
@@ -77,14 +78,7 @@ public class Project extends AuditableBase {
             this.assignedEmployees = new ArrayList<>();
         }
 
-        if (milestoneIDs != null) {
-            this.milestones = milestoneIDs.stream().map(integer -> new Milestone() {{
-                setId(integer);
-            }}).collect(Collectors.toList());
-        } else {
-            this.milestones = new ArrayList<>();
-        }
-
+        this.milestones = new ArrayList<>();
     }
 
     @Override
@@ -96,8 +90,6 @@ public class Project extends AuditableBase {
                 ", endDate=" + endDate +
                 ", totalBudget=" + totalBudget +
                 ", description='" + description + '\'' +
-                ", assignedEmployees=" + assignedEmployees +
-                ", milestones=" + milestones +
                 ", status=" + status +
                 '}';
     }
