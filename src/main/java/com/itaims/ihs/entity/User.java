@@ -1,12 +1,15 @@
 package com.itaims.ihs.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -15,7 +18,7 @@ import java.util.Date;
 @Table(name = "user")
 public class User extends AuditableBase {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
@@ -29,6 +32,7 @@ public class User extends AuditableBase {
     private String number;
 
     @Column(name = "password", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "email_verified_at", columnDefinition = "DATETIME")
@@ -37,9 +41,11 @@ public class User extends AuditableBase {
     @Column(name = "remember_token")
     private String rememberToken;
 
-    public User(Role role, String name, String number, String email, String password) {
-        this.role = role;
-        this.username = name;
+    @JsonCreator
+    public User(@JsonProperty(value = "roleId", required = true) long roleId, @JsonProperty(required = true) String username, @JsonProperty(required = true) String number, @JsonProperty(required = true) String email, @JsonProperty(required = true) String password) {
+        this.role = new Role();
+        this.role.setId(roleId);
+        this.username = username;
         this.email = email;
         this.number = number;
         this.password = password;
@@ -57,5 +63,19 @@ public class User extends AuditableBase {
                 ", emailVerifiedAt=" + emailVerifiedAt +
                 ", rememberToken='" + rememberToken + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(email);
     }
 }

@@ -1,5 +1,6 @@
 package com.itaims.ihs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,7 +13,7 @@ import java.sql.Timestamp;
 
 @MappedSuperclass
 @Data
-@EntityListeners(value = { AuditingEntityListener.class })
+@EntityListeners(value = {AuditingEntityListener.class})
 public abstract class AuditableBase {
 
     @Id
@@ -20,19 +21,23 @@ public abstract class AuditableBase {
     protected long id;
 
     @CreatedBy
-    @Column(name="created_by", updatable=false)
+    @Column(name = "created_by", updatable = false)
+    @JsonIgnore
     private String createdBy;
 
     @CreatedDate
-    @Column(name="created_dt", updatable =false)
+    @Column(name = "created_dt", updatable = false)
+    @JsonIgnore
     private Timestamp createdDt;
 
     @LastModifiedBy
-    @Column(name="modified_by")
+    @Column(name = "modified_by")
+    @JsonIgnore
     private String modifiedBy;
 
     @LastModifiedDate
-    @Column(name="modified_dt")
+    @Column(name = "modified_dt")
+    @JsonIgnore
     private Timestamp modifiedDt;
 
 }

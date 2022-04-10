@@ -1,5 +1,8 @@
 package com.itaims.ihs.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itaims.ihs.util.Status;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,10 +39,16 @@ public class Customer extends AuditableBase {
     @Column(name = "status", nullable = false)
     private Status status;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects;
 
-    public Customer(String customerName, String countryName, String type, String number, String email, String area, Status status) {
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Invoice> invoices;
+
+    @JsonCreator
+    public Customer(@JsonProperty(required = true) String customerName, @JsonProperty(required = true) String countryName, @JsonProperty(required = true) String type, @JsonProperty(required = true) String number, @JsonProperty(required = true) String email, @JsonProperty(required = true) String area, @JsonProperty(required = true) Status status) {
         this.customerName = customerName;
         this.countryName = countryName;
         this.type = type;
@@ -47,6 +56,7 @@ public class Customer extends AuditableBase {
         this.email = email;
         this.area = area;
         this.status = status;
+        System.out.println(this.status);
 
     }
 

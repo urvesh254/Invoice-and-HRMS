@@ -320,7 +320,7 @@ CREATE TABLE vendor (
 ALTER TABLE department ADD CONSTRAINT UK_f5np34wnxt905fwmrs6133l28 UNIQUE (department_name);
 ALTER TABLE permission ADD CONSTRAINT UK_l3pmqryh8vgle52647itattb9 UNIQUE (permission_name);
 ALTER TABLE role ADD CONSTRAINT UK_iubw515ff0ugtm28p8g3myt0h UNIQUE (role_name);
-ALTER TABLE role_permission ADD CONSTRAINT UK_fn4pldu982p9u158rpk6nho5k UNIQUE (permission_id);
+--ALTER TABLE role_permission ADD CONSTRAINT UK_fn4pldu982p9u158rpk6nho5k UNIQUE (permission_id);
 ALTER TABLE user ADD CONSTRAINT UK_ob8kqyqqgmefl0aco34akdtpe UNIQUE (email);
 ALTER TABLE bill ADD CONSTRAINT FKtp30esvi211s1lq78v4afj8cv FOREIGN KEY (vendor_id) REFERENCES vendor (id);
 ALTER TABLE bill_detail ADD CONSTRAINT FKeolgwyayei3o80bb7rj7t207q FOREIGN KEY (bill_id) REFERENCES bill (id);
