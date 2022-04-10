@@ -48,16 +48,16 @@ public class Customer extends AuditableBase {
     private List<Invoice> invoices;
 
     @JsonCreator
-    public Customer(@JsonProperty(required = true) String customerName, @JsonProperty(required = true) String countryName, @JsonProperty(required = true) String type, @JsonProperty(required = true) String number, @JsonProperty(required = true) String email, @JsonProperty(required = true) String area, @JsonProperty(required = true) Status status) {
+    public Customer(@JsonProperty(required = true) String customerName, @JsonProperty(required = true) String countryName, @JsonProperty(required = true) String type, @JsonProperty(required = true) String number, @JsonProperty(required = true) String email, @JsonProperty(required = true) String area, Status status) {
         this.customerName = customerName;
         this.countryName = countryName;
         this.type = type;
         this.number = number;
         this.email = email;
         this.area = area;
-        this.status = status;
-        System.out.println(this.status);
-
+        this.status = status != null ? status : Status.ACTIVE;
+        this.projects = new ArrayList<>();
+        this.invoices = new ArrayList<>();
     }
 
     public void addProject(Project project) {

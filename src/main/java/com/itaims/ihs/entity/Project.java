@@ -1,12 +1,17 @@
 package com.itaims.ihs.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itaims.ihs.util.Status;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -14,17 +19,20 @@ import java.util.List;
 @NoArgsConstructor
 public class Project extends AuditableBase {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @Column(name = "project_name", nullable = false)
     private String projectName;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
@@ -35,10 +43,12 @@ public class Project extends AuditableBase {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "project_employee", inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> assignedEmployees;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Milestone> milestones;
 
@@ -48,23 +58,46 @@ public class Project extends AuditableBase {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Project(Customer customer, String projectName, Date startDate, double totalBudget, String description, Status status) {
-        this.customer = customer;
+    @JsonCreator
+    public Project(@JsonProperty(required = true) long customerId, @JsonProperty(required = true) String projectName, @JsonProperty(required = true) Date startDate, @JsonProperty(required = true) double totalBudget, @JsonProperty(required = true) String description, Status status, @JsonProperty("assignedEmployees") List<Long> assignedEmployeeIDs, @JsonProperty("milestones") List<Long> milestoneIDs) {
+        this.customer = new Customer();
+        this.customer.setId(customerId);
+        System.out.println(this.customer);
         this.projectName = projectName;
         this.startDate = startDate;
         this.totalBudget = totalBudget;
         this.description = description;
-        this.status = status;
+        this.status = status != null ? status : Status.ON_HOLD;
+
+        if (assignedEmployeeIDs != null) {
+            this.assignedEmployees = assignedEmployeeIDs.stream().map(integer -> new Employee() {{
+                setId(integer);
+            }}).collect(Collectors.toList());
+        } else {
+            this.assignedEmployees = new ArrayList<>();
+        }
+
+        if (milestoneIDs != null) {
+            this.milestones = milestoneIDs.stream().map(integer -> new Milestone() {{
+                setId(integer);
+            }}).collect(Collectors.toList());
+        } else {
+            this.milestones = new ArrayList<>();
+        }
+
     }
 
     @Override
     public String toString() {
         return "Project{" +
-                "projectName='" + projectName + '\'' +
+                "customer=" + customer.getId() +
+                ", projectName='" + projectName + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", totalBudget=" + totalBudget +
                 ", description='" + description + '\'' +
+                ", assignedEmployees=" + assignedEmployees +
+                ", milestones=" + milestones +
                 ", status=" + status +
                 '}';
     }

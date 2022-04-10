@@ -50,7 +50,7 @@ public class RoleService {
 
     @Transactional
     public void delete(long primaryKey) {
-        Role role = this.get(primaryKey);
+        Role role = roleDao.get(primaryKey);
         roleDao.delete(role);
     }
 

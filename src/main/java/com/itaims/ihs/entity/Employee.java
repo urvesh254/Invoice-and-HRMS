@@ -24,7 +24,7 @@ public class Employee extends AuditableBase {
     @Column(name = "number", nullable = false)
     private String number;
 
-    @Column(name = "email", nullable = false,unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "address", nullable = false)
@@ -45,7 +45,7 @@ public class Employee extends AuditableBase {
     private Date dob;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "assignedEmployees", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "assignedEmployees")
     private List<Project> projects;
 
     @JsonCreator
@@ -85,7 +85,6 @@ public class Employee extends AuditableBase {
                 ", department=" + department +
                 ", joiningDate=" + joiningDate +
                 ", dob=" + dob +
-                ", projects=" + projects +
                 '}';
     }
 }
