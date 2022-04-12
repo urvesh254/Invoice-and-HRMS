@@ -53,6 +53,10 @@ public class Project extends AuditableBase {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Milestone> milestones;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Invoice> invoices;
+
     // TODO: document field will added in future.
 
     @Column(name = "status", nullable = false)

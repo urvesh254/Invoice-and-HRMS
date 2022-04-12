@@ -1,6 +1,7 @@
 package com.itaims.ihs.controller.rest;
 
 import com.itaims.ihs.entity.Employee;
+import com.itaims.ihs.entity.Invoice;
 import com.itaims.ihs.entity.Milestone;
 import com.itaims.ihs.entity.Project;
 import com.itaims.ihs.service.ProjectService;
@@ -33,9 +34,15 @@ public class ProjectRestController {
     }
 
     @GetMapping("/{id}/milestones")
-    public List<Milestone> getPermissions(@PathVariable("id") long id) {
+    public List<Milestone> getMilestones(@PathVariable("id") long id) {
         Project project = projectService.get(id);
         return project.getMilestones();
+    }
+
+    @GetMapping("/{id}/invoices")
+    public List<Invoice> getInvoices(@PathVariable("id") long id) {
+        Project project = projectService.get(id);
+        return project.getInvoices();
     }
 
     @PostMapping

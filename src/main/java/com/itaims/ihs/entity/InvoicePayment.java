@@ -10,8 +10,7 @@ import java.util.Date;
 @Data
 @Table(name = "invoice_payment")
 public class InvoicePayment extends AuditableBase {
-
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
 
