@@ -1,5 +1,6 @@
 package com.itaims.ihs.service;
 
+import com.itaims.ihs.dao.CurrencyDao;
 import com.itaims.ihs.dao.CustomerDao;
 import com.itaims.ihs.dao.InvoiceDao;
 import com.itaims.ihs.dao.ProjectDao;
@@ -24,6 +25,9 @@ public class InvoiceService {
     @Autowired
     private CustomerDao customerDao;
 
+    @Autowired
+    private CurrencyDao currencyDao;
+
 
     @Transactional
     public List<Invoice> getAll() {
@@ -41,6 +45,7 @@ public class InvoiceService {
     public void save(Invoice object) {
         Project project = projectDao.get(object.getProject().getId());
         Customer customer = customerDao.get(object.getCustomer().getId());
+
         project.getInvoices().add(object);
         customer.getInvoices().add(object);
     }
