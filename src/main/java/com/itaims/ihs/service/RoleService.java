@@ -42,9 +42,9 @@ public class RoleService {
     @Transactional
     public void update(Role object) {
         Role role = roleDao.get(object.getId());
-        role.setPermissions(object.getPermissions());
-        role.setUsers(object.getUsers());
-        setPermissionsToRole(role, object.getPermissions());
+        object.setUsers(role.getUsers());
+        setPermissionsToRole(object, object.getPermissions());
+        roleDao.update(object);
     }
 
 
@@ -59,10 +59,11 @@ public class RoleService {
         List<Permission> permissions = new ArrayList<>();
         if (thePermissions == null) return;
 
-        for (int i = 0; i < thePermissions.size(); i++) {
-            permissions.add(i, permissionDao.get(thePermissions.get(i).getId()));
+        for (Permission thePermission : thePermissions) {
+            permissions.add(permissionDao.get(thePermission.getId()));
         }
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>" + permissions);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>" + role);
         role.setPermissions(permissions);
     }
 }

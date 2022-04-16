@@ -1,6 +1,7 @@
 package com.itaims.ihs.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +24,11 @@ public class Role extends AuditableBase {
     @Column(name = "role_name", nullable = false, unique = true)
     private String roleName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "role_permission", inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
 
@@ -38,6 +41,8 @@ public class Role extends AuditableBase {
             this.permissions = permissions.stream().map(integer -> new Permission() {{
                 setId(integer);
             }}).collect(Collectors.toList());
+        } else {
+            this.permissions = new ArrayList<>();
         }
     }
 
@@ -46,6 +51,8 @@ public class Role extends AuditableBase {
         return "Role{" +
                 "id=" + id +
                 ", roleName='" + roleName + '\'' +
+                ", users=" + users +
+                ", permissions=" + permissions +
                 '}';
     }
 }
