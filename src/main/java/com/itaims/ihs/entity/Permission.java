@@ -1,5 +1,6 @@
 package com.itaims.ihs.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -12,13 +13,14 @@ import javax.persistence.Table;
 @Table(name = "permission")
 public class Permission extends AuditableBase {
 
-    @Column(name = "permission_name", nullable = false, unique = true)
     @JsonProperty(required = true)
+    @Column(name = "permission_name", nullable = false, unique = true)
     private String permissionName;
 
     public Permission() {
     }
 
+    @JsonCreator
     public Permission(String permissionName) {
         this.permissionName = permissionName;
     }

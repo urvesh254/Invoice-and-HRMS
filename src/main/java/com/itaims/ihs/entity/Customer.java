@@ -40,11 +40,11 @@ public class Customer extends AuditableBase {
     private Status status;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "customer", orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "customer", orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Invoice> invoices;
 
     @JsonCreator

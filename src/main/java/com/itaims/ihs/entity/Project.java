@@ -45,7 +45,7 @@ public class Project extends AuditableBase {
     private String description;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "project_employee", inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> assignedEmployees;
 
@@ -83,18 +83,24 @@ public class Project extends AuditableBase {
         }
 
         this.milestones = new ArrayList<>();
+        this.invoices = new ArrayList<>();
     }
 
     @Override
     public String toString() {
         return "Project{" +
-                "customer=" + customer.getId() +
+                "id=" + id +
+                ", customer=" + customer.getId() +
                 ", projectName='" + projectName + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", totalBudget=" + totalBudget +
                 ", description='" + description + '\'' +
+                ", assignedEmployees=" + assignedEmployees +
+                ", milestones=" + milestones +
+                ", invoices=" + invoices +
                 ", status=" + status +
                 '}';
     }
+
 }
