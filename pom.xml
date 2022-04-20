@@ -52,6 +52,13 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>
