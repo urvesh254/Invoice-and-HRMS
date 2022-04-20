@@ -4,6 +4,7 @@ import com.itaims.ihs.entity.AuditableBase;
 import com.itaims.ihs.error.IdNotPresentException;
 import com.itaims.ihs.error.ObjectNotFoundException;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,18 @@ public class ExceptionAspect {
         if (object.getId() == 0) {
             logger.warning("Id must be present during PUT request");
             throw new IdNotPresentException("Id must be present during PUT request", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @param result
+     * @brief Check if result of "get(..)" method in dao is null or not
+     */
+    @AfterReturning(pointcut = "execution(* com.itaims.ihs.dao.*.get(..))", returning = "result")
+    public void getObjectNotNull(Object result) {
+        if (result == null) {
+            logger.warning("Object is not found with given id");
+            throw new ObjectNotFoundException("Object is not found with given id");
         }
     }
 }
