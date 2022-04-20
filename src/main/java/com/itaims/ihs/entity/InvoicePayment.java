@@ -12,6 +12,7 @@ import java.util.Map;
 @Entity
 @Data
 @Table(name = "invoice_payment")
+@JsonPropertyOrder("id")
 public class InvoicePayment extends AuditableBase {
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.REFRESH)

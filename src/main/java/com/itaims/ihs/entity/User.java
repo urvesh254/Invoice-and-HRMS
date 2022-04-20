@@ -3,6 +3,7 @@ package com.itaims.ihs.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Table(name = "user")
+@JsonPropertyOrder("id")
 public class User extends AuditableBase {
 
     @ManyToOne(cascade = {CascadeType.REFRESH})

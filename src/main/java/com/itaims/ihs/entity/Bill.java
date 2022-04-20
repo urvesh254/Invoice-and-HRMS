@@ -10,6 +10,7 @@ import java.util.*;
 @Entity
 @Data
 @Table(name = "bill")
+@JsonPropertyOrder("id")
 public class Bill extends AuditableBase {
 
     @JsonIgnore
