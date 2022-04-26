@@ -1,6 +1,7 @@
 package com.itaims.ihs.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Data
 @Table(name = "currency")
+@JsonPropertyOrder("id")
 public class Currency extends AuditableBase {
     @JsonProperty(required = true)
     @Column(name = "currency_name", nullable = false)

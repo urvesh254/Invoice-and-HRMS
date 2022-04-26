@@ -14,6 +14,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @Table(name = "milestone_module")
+@JsonPropertyOrder("id")
 public class MilestoneModule extends AuditableBase {
     @JsonIgnore
     @ManyToOne
