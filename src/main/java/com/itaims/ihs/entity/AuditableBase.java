@@ -1,6 +1,7 @@
 package com.itaims.ihs.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,6 +16,7 @@ import java.util.Objects;
 @MappedSuperclass
 @Data
 @EntityListeners(value = {AuditingEntityListener.class})
+@JsonPropertyOrder("id")
 public abstract class AuditableBase {
 
     @Id
