@@ -1,6 +1,9 @@
 package com.itaims.ihs.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itaims.ihs.util.Status;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +18,6 @@ import java.util.stream.Collectors;
 @Data
 @Table(name = "project")
 @NoArgsConstructor
-@JsonPropertyOrder("id")
 public class Project extends AuditableBase {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

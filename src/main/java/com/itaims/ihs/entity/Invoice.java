@@ -11,7 +11,6 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @Table(name = "invoice")
-@JsonPropertyOrder("id")
 public class Invoice extends AuditableBase {
     @JsonIgnore
     @ManyToOne

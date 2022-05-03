@@ -2,7 +2,6 @@ package com.itaims.ihs.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.itaims.ihs.util.Status;
 import lombok.Data;
 
@@ -11,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "service")
-@JsonPropertyOrder("id")
 public class Service extends AuditableBase {
     @JsonProperty(required = true)
     @Column(name = "service_name", nullable = false)

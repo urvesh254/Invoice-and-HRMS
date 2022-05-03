@@ -2,7 +2,6 @@ package com.itaims.ihs.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -12,7 +11,6 @@ import javax.persistence.Table;
 @Entity
 @Data
 @Table(name = "permission")
-@JsonPropertyOrder("id")
 public class Permission extends AuditableBase {
 
     @JsonProperty(required = true)

@@ -12,7 +12,6 @@ import java.util.Map;
 @Entity
 @Data
 @Table(name = "bill_payment")
-@JsonPropertyOrder("id")
 public class BillPayment extends AuditableBase {
 
     @JsonIgnore

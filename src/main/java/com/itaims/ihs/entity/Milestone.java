@@ -12,7 +12,6 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @Table(name = "milestone")
-@JsonPropertyOrder("id")
 public class Milestone extends AuditableBase {
 
     @JsonIgnore

@@ -19,20 +19,6 @@ public class ExceptionAspect {
 
     /**
      * @param joinPoint
-     * @brief Check for null before deleting the object.
-     */
-    @Before("execution(* com.itaims.ihs.dao.*.delete(*))")
-    public void checkForObjectNull(JoinPoint joinPoint) {
-        Object object = joinPoint.getArgs()[0];
-        if (object == null) {
-            logger.warning("Object is not found with given id");
-            throw new ObjectNotFoundException("Object is not found with given id");
-        }
-    }
-
-
-    /**
-     * @param joinPoint
      * @breif Check for id before updating the object.
      */
     @Before("execution(* com.itaims.ihs.controller.rest.*.update(..))")
@@ -50,10 +36,13 @@ public class ExceptionAspect {
      * @brief Check if result of "get(..)" method in dao is null or not
      */
     @AfterReturning(pointcut = "execution(* com.itaims.ihs.dao.*.get(..))", returning = "result")
-    public void getObjectNotNull(Object result) {
+    public void getObjectNotNull(JoinPoint joinPoint, Object result) {
+        long id = (long) joinPoint.getArgs()[0];
+        String className = joinPoint.getSignature().getDeclaringType().getSimpleName().replaceAll("Dao", "");
         if (result == null) {
-            logger.warning("Object is not found with given id");
-            throw new ObjectNotFoundException("Object is not found with given id");
+            String message = String.format("%s is not found with given %d", className, id);
+            logger.warning(message);
+            throw new ObjectNotFoundException(message);
         }
     }
 }

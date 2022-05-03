@@ -1,6 +1,9 @@
 package com.itaims.ihs.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,7 +13,6 @@ import java.util.Map;
 @Entity
 @Data
 @Table(name = "bill_detail")
-@JsonPropertyOrder("id")
 public class BillDetail extends AuditableBase {
 
     @JsonIgnore
