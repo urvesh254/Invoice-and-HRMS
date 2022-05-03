@@ -3,9 +3,9 @@ package com.itaims.ihs.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,10 +15,11 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // Validity in hours.
-    private static final int JWT_TOKEN_VALIDITY = 10;
+    @Value("${com.itaims.ihs.jwt.valid-hours}")
+    private long JWT_TOKEN_VALIDITY;
 
-    private static final String SECRET_KEY = "mySecretKeyFromApplication.properties";
+    @Value("${com.itaims.ihs.jwt.secret-key}")
+    private String SECRET_KEY;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
