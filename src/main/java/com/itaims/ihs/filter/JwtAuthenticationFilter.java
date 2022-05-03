@@ -1,8 +1,12 @@
 package com.itaims.ihs.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itaims.ihs.response.ErrorResponse;
 import com.itaims.ihs.service.CustomUserDetailsService;
 import com.itaims.ihs.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
+        ErrorResponse errorResponse = null;
         String requestToken = request.getHeader("Authorization");
 
         if (requestToken != null && requestToken.startsWith("Bearer ")) {
@@ -39,7 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = this.jwtUtil.extractUsername(jwtToken);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.warning(e.getMessage());
+                errorResponse = new ErrorResponse("Invalid Token", HttpStatus.UNAUTHORIZED.value());
+                handleFilterException(response, errorResponse);
+                return;
             }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -51,15 +58,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             } else {
-                System.out.println("Token is not validated.");
+                logger.info("Token is not validated.");
+                errorResponse = new ErrorResponse("Invalid Token", HttpStatus.UNAUTHORIZED.value());
+                handleFilterException(response, errorResponse);
+                return;
             }
 
         } else if (!request.getRequestURI().equals("/login")) {
-            logger.info("in filter exception");
-            throw new RuntimeException("You must add authorization header in request.");
+            logger.info("in filter exception not login");
+            errorResponse = new ErrorResponse("You must add authorization header in request.", HttpStatus.BAD_REQUEST.value());
+            handleFilterException(response, errorResponse);
+            return;
         }
         logger.info("in filter");
+
         filterChain.doFilter(request, response);
 
     }
+
+    private void handleFilterException(HttpServletResponse response, ErrorResponse errorResponse) throws IOException {
+        String jsonException = convertObjectToJSON(errorResponse);
+
+        response.setContentType("application/json");
+        response.setStatus(errorResponse.getStatus());
+        response.getWriter().write(jsonException);
+        response.getWriter().close();
+    }
+
+    private String convertObjectToJSON(Object object) throws JsonProcessingException {
+        if (object == null) return "";
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(object);
+    }
+
+
 }

@@ -1,14 +1,18 @@
 package com.itaims.ihs.controller.jwt;
 
+import com.itaims.ihs.error.CustomException;
 import com.itaims.ihs.request.JwtRequest;
 import com.itaims.ihs.response.JwtResponse;
 import com.itaims.ihs.service.CustomUserDetailsService;
 import com.itaims.ihs.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +39,10 @@ public class JwtController {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Bad Credentials");
+        } catch (UsernameNotFoundException | BadCredentialsException be) {
+            throw new CustomException("Login failed wrong user credentials", HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            throw new CustomException("Server Error!!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
