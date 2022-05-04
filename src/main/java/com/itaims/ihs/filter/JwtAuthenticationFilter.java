@@ -2,8 +2,10 @@ package com.itaims.ihs.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itaims.ihs.entity.JwtInvalidToken;
 import com.itaims.ihs.response.ErrorResponse;
 import com.itaims.ihs.service.CustomUserDetailsService;
+import com.itaims.ihs.service.JwtInvalidTokenService;
 import com.itaims.ihs.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,15 +33,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private JwtInvalidTokenService jwtInvalidTokenService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        ErrorResponse errorResponse = null;
+        ErrorResponse errorResponse;
         String requestToken = request.getHeader("Authorization");
 
+        if (request.getRequestURI().startsWith("/token") || request.getRequestURI().startsWith("/invalidateToken")) {
+            logger.info("/login or /logout found" + request.getRequestURI());
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (requestToken != null && requestToken.startsWith("Bearer ")) {
-            String username = null;
+            String username;
             String jwtToken = requestToken.substring(7);
+
+            // check if this token is present in the invalid_tokens or not
+            JwtInvalidToken invalidToken = jwtInvalidTokenService.getByToken(jwtToken);
+            logger.info(invalidToken == null ? null : invalidToken.toString());
+            if (invalidToken != null) {
+                errorResponse = new ErrorResponse("Invalid Token", HttpStatus.UNAUTHORIZED.value());
+                handleFilterException(response, errorResponse);
+                return;
+            }
+
             try {
                 username = this.jwtUtil.extractUsername(jwtToken);
             } catch (Exception e) {
@@ -64,8 +85,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-        } else if (!request.getRequestURI().equals("/login")) {
-            logger.info("in filter exception not login");
+        } else {
+            logger.info("in filter exception not login and logout");
             errorResponse = new ErrorResponse("You must add authorization header in request.", HttpStatus.BAD_REQUEST.value());
             handleFilterException(response, errorResponse);
             return;
