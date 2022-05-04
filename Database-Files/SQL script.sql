@@ -354,3 +354,13 @@ ALTER TABLE project_employee ADD CONSTRAINT FKo8tuufttvxdkddrgq026nvhte FOREIGN 
 ALTER TABLE role_permission ADD CONSTRAINT FKf8yllw1ecvwqy3ehyxawqa1qp FOREIGN KEY (permission_id) REFERENCES permission (id);
 ALTER TABLE role_permission ADD CONSTRAINT FKa6jx8n8xkesmjmv6jqug6bg68 FOREIGN KEY (role_id) REFERENCES role (id);
 ALTER TABLE user ADD CONSTRAINT FKn82ha3ccdebhokx3a8fgdqeyy FOREIGN KEY (role_id) REFERENCES role (id);
+
+
+
+-- SQL Stored Procedure for deleting old invalid tokens.
+CREATE DEFINER=`ihs_dev`@`localhost` PROCEDURE `delete_old_invalid_tokes`()
+BEGIN
+SET SQL_SAFE_UPDATES = 0;
+Delete from invalid_tokens where valid_till < NOW();
+SET SQL_SAFE_UPDATES = 1;
+END
