@@ -1,5 +1,6 @@
 package com.itaims.ihs.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +14,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final String USERNAME = "Urvesh";
     private final String PASSWORD = "urvesh@123";
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.equals(USERNAME)) {
-            return new User(USERNAME, PASSWORD, new ArrayList<>());
+        com.itaims.ihs.entity.User givenUserDetails = userService.getByEmail(username);
+
+        if (givenUserDetails != null) {
+            return new User(givenUserDetails.getEmail(), givenUserDetails.getPassword(), new ArrayList<>());
         } else {
             throw new UsernameNotFoundException("User not Found!!");
         }

@@ -29,6 +29,10 @@ public class UserService {
         return userDao.get(primaryKey);
     }
 
+    @Transactional
+    public User getByEmail(String email) {
+        return userDao.getByEmail(email);
+    }
 
     @Transactional
     public void save(User object) {
