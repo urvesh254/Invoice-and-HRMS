@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS currency;
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS expenses;
+DROP TABLE IF EXISTS invalid_tokens;
 DROP TABLE IF EXISTS invoice;
 DROP TABLE IF EXISTS milestone;
 DROP TABLE IF EXISTS milestone_module;
@@ -129,6 +130,17 @@ CREATE TABLE expenses (
   status VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE = MYISAM;
+
+CREATE TABLE `invalid_tokens` (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    token VARCHAR(255) NOT NULL,
+    valid_till DATE NOT NULL,
+    created_by VARCHAR(255),
+    created_dt DATETIME,
+    modified_by VARCHAR(255),
+    modified_dt DATETIME,
+    PRIMARY KEY (`id`)
+)  ENGINE=MYISAM;
 
 CREATE TABLE invoice (
   id BIGINT NOT NULL AUTO_INCREMENT,
