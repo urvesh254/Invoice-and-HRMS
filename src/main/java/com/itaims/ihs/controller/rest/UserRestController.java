@@ -3,6 +3,7 @@ package com.itaims.ihs.controller.rest;
 import com.itaims.ihs.entity.User;
 import com.itaims.ihs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,9 @@ import java.util.List;
 public class UserRestController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<User> getAll() {
@@ -26,12 +30,14 @@ public class UserRestController {
     @PostMapping
     public long save(@RequestBody User object) {
         System.out.println(object);
+        object.setPassword(passwordEncoder.encode(object.getPassword()));
         userService.save(object);
         return object.getId();
     }
 
     @PutMapping
     public long update(@RequestBody User object) {
+        object.setPassword(passwordEncoder.encode(object.getPassword()));
         userService.update(object);
         return object.getId();
     }
