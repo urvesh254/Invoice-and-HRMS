@@ -26,7 +26,7 @@ public class Role extends AuditableBase {
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users;
 
-    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},fetch = FetchType.EAGER)
     @JoinTable(name = "role_permission", inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
 
@@ -35,7 +35,6 @@ public class Role extends AuditableBase {
         this.id = id;
         this.roleName = roleName;
         if (permissions != null) {
-            System.out.println(">>>>>>>>>>>>" + permissions);
             this.permissions = permissions.stream().map(integer -> new Permission() {{
                 setId(integer);
             }}).collect(Collectors.toList());
