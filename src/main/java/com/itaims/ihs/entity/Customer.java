@@ -59,11 +59,4 @@ public class Customer extends AuditableBase {
         this.projects = new ArrayList<>();
         this.invoices = new ArrayList<>();
     }
-
-    public void addProject(Project project) {
-        if (projects == null) {
-            projects = new ArrayList<>();
-        }
-        projects.add(project);
-    }
 }

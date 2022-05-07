@@ -1,17 +1,12 @@
 package com.itaims.ihs.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.itaims.ihs.util.Status;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -20,7 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class Project extends AuditableBase {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
@@ -84,6 +79,15 @@ public class Project extends AuditableBase {
 
         this.milestones = new ArrayList<>();
         this.invoices = new ArrayList<>();
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getExtras() {
+        Map<String, Object> extras = new HashMap<>();
+
+        extras.put("customerId", customer.getId());
+
+        return extras;
     }
 
     @Override
